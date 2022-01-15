@@ -1,0 +1,98 @@
+TITLE Anagram_solver (Anagram.asm)
+INCLUDE Irvine32.inc
+
+.data
+count = 20
+promptin BYTE "Enter your word of max length 10 : ",0
+wordinput BYTE count DUP(?)
+c1 dword 0
+p dword count dup (0)
+i dword 1
+j dword 0
+
+.code
+swap PROC , pval:Ptr Dword ,pval2:PTR dword
+	mov esi,pval
+	mov al,[esi]	;al=second alphabet ka address 
+	mov esi,pval2
+	mov bl,[esi]	;bl=first alphabet ka address
+
+	mov [esi],al
+	mov esi,pval
+	mov [esi],bl
+	ret
+swap ENDP
+
+findPerms proc , n : dword	;n=Length of wordinput
+
+mov edx, OFFSET wordinput
+call writestring
+call crlf
+call crlf
+
+inc c1
+L1:
+	mov eax,i
+	cmp eax,n
+	JAE L2
+		mov esi,i
+		mov eax,p[esi*type p]
+		;call DumpRegs
+		cmp eax,i
+		JAE L3
+			MOV edx,0
+			mov eax,i
+			mov ebx,2
+			div ebx
+
+			mov ebx,edx
+			mov esi,i
+			mov eax,p[esi*type p]
+			mul ebx
+
+			mov j,eax
+
+			mov esi,OFFSET wordinput
+			add esi,i
+			mov edi,OFFSET wordinput
+			add edi,j
+
+			invoke swap, esi,edi
+			inc c1
+			mov edx,OFFSET wordinput
+			call writestring
+			call crlf
+			mov esi,i
+			mov eax,p[esi*type p]
+			inc eax
+			mov p[esi*type p],eax
+			mov i,1
+			jmp L1
+L3:
+	mov esi,i
+	mov p[esi*type p],0
+	inc i
+	jmp L1
+L2:
+	ret
+findPerms endp
+
+main PROC	
+	mov edx, offset promptin
+	call writestring
+	mov edx, offset wordinput
+	mov ecx, count
+	call readstring
+	call crlf
+	mov eax,0
+
+	invoke str_length, addr wordinput
+	call DumpRegs
+	invoke findPerms, eax
+	mov eax,c1
+	Call Writedec
+	call crlf
+	exit 
+
+main ENDP
+END main

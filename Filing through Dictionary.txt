@@ -1,0 +1,54 @@
+TITLE My First Program (Test.asm)
+INCLUDE Irvine32.inc
+.data
+filehandle DWORD ?
+afile BYTE "a.txt", 0
+bfile BYTE "b.txt", 0
+cfile BYTE "c.txt", 0
+dfile BYTE "d.txt", 0
+efile BYTE "e.txt", 0
+ffile BYTE "f.txt", 0
+gfile BYTE "g.txt", 0
+hfile BYTE "h.txt", 0
+ifile BYTE "i.txt", 0
+jfile BYTE "j.txt", 0
+kfile BYTE "k.txt", 0
+lfile BYTE "l.txt", 0
+mfile BYTE "m.txt", 0
+nfile BYTE "n.txt", 0
+ofile BYTE "o.txt", 0
+pfile BYTE "p.txt", 0
+qfile BYTE "q.txt", 0
+rfile BYTE "r.txt", 0
+sfile BYTE "s.txt", 0
+tfile BYTE "t.txt", 0
+ufile BYTE "u.txt", 0
+vfile BYTE "v.txt", 0
+wfile BYTE "w.txt", 0
+xfile BYTE "x.txt", 0
+yfile BYTE "y.txt", 0
+zfile BYTE "z.txt", 0
+
+bufferSize = 999990
+buffer BYTE "1234567890",0
+
+buffer1 BYTE bufferSize dup(?)
+.code
+main PROC
+
+mov edx,OFFSET sfile
+call OpenInputFile
+mov filehandle, EAX
+
+;L1:
+	mov eax, filehandle
+	mov edx, OFFSET buffer1
+	mov ecx, bufferSize
+	call ReadFromFile
+
+	mov edx,offset buffer1
+	call writestring
+;loop L1
+exit
+main ENDP
+END main
